@@ -47,7 +47,7 @@ def login():
         except:
             return 'Failed to login. Username and/or password may be incorrect.'
     else:
-        return "Login page here"
+        return render_template('Login.html')
 
 
 @app.route('/logout')
@@ -107,7 +107,7 @@ def createUser():
                 return {'message': 'Error! Something went wrong. Please try again'}, 400
         
         else:
-            return "Signup screen here"
+            return render_template('SignUp.html')
 
 @app.route("/setup_user_step_1", methods=["GET", "POST"])
 def setupUserStep1():
