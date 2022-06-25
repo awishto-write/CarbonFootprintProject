@@ -41,6 +41,10 @@ def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        print(str(email))
+        print(str(password))
+        if email == "" or password == "":
+            return "Error - email or password field was empty."
         try:
             user = auth.sign_in_with_email_and_password(email, password)
             session['user'] = email
@@ -61,12 +65,12 @@ def logout():
 @app.route('/forgot_password', methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
-        if 'user' in session:
-            email = request.form.get('email')
-            auth.send_password_reset_email(email)
-            return 'Password reset email sent'
-        else:
-            return 'Please log in first.'
+        email = request.form.get('email')
+        if email is None:
+            return "Error - email field was empty"
+        auth.send_password_reset_email(email)
+        return 'Password reset email sent'
+ 
     else:
         return "i forgor"
 
@@ -82,7 +86,7 @@ def createUser():
             password_a = request.form.get('password')
             username = request.form.get('username')
 
-            if email_a is None or password_a is None or username is None:
+            if email_a == "" or password_a == "" or username == "":
                 return {'message': 'Error! Missing username, email or password'}, 400
 
             try:
