@@ -9,14 +9,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- include topnav styling -->
-<link rel="stylesheet" href="TopNav.css">
+<link rel="stylesheet" href="../static/top_nav.css">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <div class="topnav">
-<div class="logo"><img src="tree.jpg" class="w3-round w3-image" alt="tree logo" width="50" height="50"><b><i> SIMPLY GREEN LENSES </i></b></div>
+<div class="logo"><img src="../static/tree.jpg" class="w3-round w3-image" alt="tree logo" width="50" height="50"><b><i> SIMPLY GREEN LENSES </i></b></div>
 <div class=menu>
- <a  href="Login.html">Login</a>
- <a href="SignUp.html">Sign Up</a>
+ <a  href="/login">Login</a>
+ <a href="/create_user">Sign Up</a>
  <a href="Connect.html">Connect</a>
  <a href="Problem.html">Problem</a>
  <a href="Solutions.html">Solutions</a>
@@ -71,7 +71,7 @@
   }
 
   body {
-    background-image: url("leaf.jpg");
+    background-image: url("../static/leaf.jpg");
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-size: cover;
@@ -125,38 +125,47 @@ footer{
   </div>
   
   <div class = "w3-container">
-
+    <form method="POST">
     <h5> Enter your monthly electric bill.</h5>
-  <<script> var elInput = prompt ("Enter your monthly electric bill: ");
-       document.write(elInput) </script>>
+    <textarea id="elBill" name="elBill" rows="2" cols="40"></textarea>
+  <script> var elInput = prompt ("Enter your monthly electric bill: ");
+       document.getElementById('elBill').value = elInput </script>
 
     <h5> Enter your monthy gas bill.</h5>
+    <textarea id="gasBill" name="gasBill" rows="2" cols="40"></textarea>
     <script> var gasInput = prompt ("Enter your monthy gas bill: ");
-        document.write(gasInput) </script>
+        document.getElementById('gasBill').value = gasInput </script>
 
     <h5> Enter your monthy oil bill. </h5>
+    <textarea id="oilBill" name="oilBill" rows="2" cols="40"></textarea>
     <script> var oilInput = prompt ("Enter your monthy oil bill: ");
-        document.write(oilInput) </script>
+        document.getElementById('oilBill').value = oilInput </script>
 
     <h5> Enter your total yearly mileage on your car.</h5>
+    <textarea id="mileage" name="mileage" rows="2" cols="40"></textarea>
     <script> var miInput = prompt (" Enter your total yearly mileage on your car: ");
-        document.write(miInput) </script>
+        document.getElementById('mileage').value = miInput </script>
 
     <h5> Enter the number of flights you've taken in the past year (4 hours of less).</h5>
+    <textarea id="fly" name="fly" rows="2" cols="40"></textarea>
     <script> var flyInput = prompt ("Enter the number of flights you've taken in the past year (4 hours of less): ");
-        document.write(flyInput) </script>
+         document.getElementById('fly').value = flyInput </script>
 
     <h5> Enter the number of flights you've taken in the past year (4 hours or more).</h5>
+    <textarea id="fly2" name="fly2" rows="2" cols="40"></textarea>
     <script> var fly2Input = prompt (" Enter the number of flights you've taken in the past year (4 hours or more): ");
-        document.write(fly2Input) </script>
+        document.getElementById('fly2').value = fly2Input </script>
+
 
     <h5> Do you recycle newspaper? </h5>
+    <textarea id="news" name="news" rows="2" cols="40"></textarea>
     <script> var newInput = prompt ("Do you recycle newspaper? Respond by yes or no");
-        document.write(newInput) </script>
+        document.getElementById('news').value = newInput </script>
 
-    <h5> Do you recycle alumni and tin? </h5>
-    <script> var alInput = prompt (" Do you recycle alumni and tin? Respond by yes or no");
-        document.write(alInput) </script>
+    <h5> Do you recycle aluminum and tin? </h5>
+    <textarea id="aluminum" name="aluminum" rows="2" cols="40"></textarea>
+    <script> var alInput = prompt (" Do you recycle aluminum and tin? Respond by yes or no");
+        document.getElementById('aluminum').value = alInput </script>
 
     
 

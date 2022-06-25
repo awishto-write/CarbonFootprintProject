@@ -263,9 +263,22 @@ def setupUserFinal():
                 total_sum = total_sum + 184
             if x['recycle_cans'] == False:
                 total_sum = total_sum + 166
+        
+        filter = {'email': session['user']}
+        newvalues = {"$set": {'footprint': total_sum}}
+        mongo.db.users.update_one(filter, newvalues)
         return "Your carbon footprint is " + str(total_sum) + "."
             
 
     else:
         return "No user is logged in."
+
+@app.route("/calculate_footprint", methods=["GET", "POST"])
+def calculate_footprint():
+    if request.method == "POST":
+        print(request.form)
+        return "eeby deeby"
+    else:
+        return render_template("Calculations.html")
+
     
