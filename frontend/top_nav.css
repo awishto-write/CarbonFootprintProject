@@ -1,0 +1,38 @@
+/*Setting all margin to 0 for topnav to be able to extend to edges.*/
+ *{
+    margin:0;
+    box-sizing: border-box;
+  }
+  
+  .topnav {
+    background-color: rgba(0, 128, 0, 1.0);
+    overflow: hidden;
+    display: flex;
+    padding: 20px;
+    justify-content: space-between;
+  }
+  
+  .topnav a {
+    float: left;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+    border-radius: 7px;
+  }
+  
+  .logo{
+    color: white;
+    padding-right: 20px;
+    font-size: 32px;
+  }
+  
+  .topnav a.active {
+    color: white;
+  }
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #ddd;
+    color: black;
+  }
