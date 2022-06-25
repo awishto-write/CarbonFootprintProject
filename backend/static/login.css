@@ -1,0 +1,22 @@
+button {
+    color: #494A00
+}
+input[type=text] {
+    padding:5px; 
+    border:2px solid rgb(160, 172, 157); 
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+input[type=text]:focus {
+    border-color:rgb(13, 65, 27);
+}
+
+input[type=submit] {
+    padding:5px 15px; 
+    background:rgb(160, 172, 157); 
+    border:0 none;
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px; 
+}

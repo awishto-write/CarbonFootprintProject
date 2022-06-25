@@ -1,1 +1,5 @@
 venv/
+backend/__pycache__/
+backend/.env
+backend/fbAdminConfig.json
+backend/fbConfig.json

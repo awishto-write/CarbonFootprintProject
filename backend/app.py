@@ -38,9 +38,9 @@ def login():
             user = auth.sign_in_with_email_and_password(email, password)
             session['user'] = email
         except:
-            return 'Failed to login.'
+            return 'Failed to login. Username and/or password may be incorrect.'
     else:
-        return "Login page goes here."
+        return render_template('login.html')
 
 
 @app.route('/logout')
