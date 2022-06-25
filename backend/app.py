@@ -69,14 +69,24 @@ def logout():
 @app.route('/forgot_password', methods=["GET", "POST"])
 def forgot_password():
     if request.method == "POST":
-        email = request.form.get('email')
-        if email is None:
-            return "Error - email field was empty"
-        auth_t.send_password_reset_email(email)
-        return 'Password reset email sent'
+        try:
+            email = request.form.get('email')
+            if email is None:
+                return "Error - email field was empty"
+            auth_t.send_password_reset_email(email)
+            return redirect('/reset_success')
+        except:
+            return "Whoops, something went wrong! An invalid email was likely entered."
  
     else:
-        return "i forgor"
+        return render_template('forgot_password.html')
+
+@app.route('/reset_success')
+def reset_success():
+    if 'user' in session:
+        return "Error - a user is logged in"
+    else:
+        return render_template('reset_success.html')
 
  
 @app.route("/create_user", methods=["GET","POST"])
