@@ -9,12 +9,16 @@ import os
 import pyrebase
 import firebase_admin
 
-app = Flask(__name__)
+template_dir = os.path.abspath('../frontend/templates/')
+static_dir = os.path.abspath('../frontend/static/')
+app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+
 secret = os.getenv('url')
 app.config["MONGO_URI"] = secret
 
 mongo = PyMongo(app)
 mongo.db.users.create_index([('email', pymongo.ASCENDING)], unique=True)
+mongo.db.users.create_index([('username', pymongo.ASCENDING)], unique=True)
 
 cred = credentials.Certificate('fbAdminConfig.json')
 firebase = firebase_admin.initialize_app(cred)
@@ -24,8 +28,11 @@ pb = pyrebase.initialize_app(json.load(open('fbConfig.json')))
 
 @app.route("/")
 def index():
-    print("Main page.")
-    return "Request successful"
+    if 'user' in session:
+        return "Login page but when someone is logged in"
+    else:
+        return render_template('home_page.html')
+
 
 @app.route("/login", methods=['POST', 'GET'])
 def login():
@@ -40,7 +47,7 @@ def login():
         except:
             return 'Failed to login. Username and/or password may be incorrect.'
     else:
-        return render_template('login.html')
+        return "Login page here"
 
 
 @app.route('/logout')
@@ -61,7 +68,7 @@ def forgot_password():
         else:
             return 'Please log in first.'
     else:
-        return "Forgot password email entry screen here."
+        return "i forgor"
 
  
 @app.route("/create_user", methods=["GET","POST"])
@@ -73,28 +80,32 @@ def createUser():
 
             email_a = request.form.get('email')
             password_a = request.form.get('password')
-            if email_a is None or password_a is None:
-                return {'message': 'Error! Missing email or password'}, 400
-            try:
-                user = auth.create_user(email=email_a, password=password_a)
-            except:
-                return {'message': 'Error! Something went wrong. Please try again'}, 400
-        
+            username = request.form.get('username')
+
+            if email_a is None or password_a is None or username is None:
+                return {'message': 'Error! Missing username, email or password'}, 400
+
             try:
 
-                user_id = user.uid
-                email = email_a
-                password = password_a
-
-                userDocument = {'user_id': user_id, 'email': email, 'password': password, 'electric_bill': 0, 
+                userDocument = {'user_id': "", 'username': username, 'email': email_a, 'password': password_a, 'electric_bill': 0, 
                 'gas_bill': 0, 'oil_bill': 0, 'mileage': 0, 'flights_less': 0, 'flights_greater': 0,
                 'recycle_paper': False, 'recycle_cans': False,'footprint': 0}
                 mongo.db.users.insert_one(userDocument)
-                return {'message': f'Successfully created user {user.uid}'}, 200
+                
             except pymongo.errors.DuplicateKeyError:
-                return ("A user with that email already exists.")
+                return ("A user with that username or email already exists.")
             except:
                 return "Something went wrong. Please try again."
+
+            try:
+                user = auth.create_user(email=email_a, password=password_a)
+                filter = {'email': email_a}
+                newvalues = {"$set": {'user_id': user.uid}}
+                mongo.db.users.update_one(filter, newvalues)
+                return {'message': f'Successfully created user {user.uid}'}, 200
+            except:
+                return {'message': 'Error! Something went wrong. Please try again'}, 400
+        
         else:
             return "Signup screen here"
 
