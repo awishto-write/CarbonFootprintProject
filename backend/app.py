@@ -12,6 +12,7 @@ import firebase_admin
 template_dir = os.path.abspath('../frontend/templates/')
 static_dir = os.path.abspath('../frontend/static/')
 app = Flask(__name__, template_folder=template_dir, static_folder=static_dir)
+app.secret_key = os.getenv('secret_key')
 
 secret = os.getenv('url')
 app.config["MONGO_URI"] = secret
@@ -24,12 +25,12 @@ cred = credentials.Certificate('fbAdminConfig.json')
 firebase = firebase_admin.initialize_app(cred)
 pb = pyrebase.initialize_app(json.load(open('fbConfig.json')))
 
-
+auth_t = pb.auth()
 
 @app.route("/")
 def index():
     if 'user' in session:
-        return "Login page but when someone is logged in"
+        return render_template('home_page_signedin.html')
     else:
         return render_template('home_page.html')
 
@@ -46,9 +47,11 @@ def login():
         if email == "" or password == "":
             return "Error - email or password field was empty."
         try:
-            user = auth.sign_in_with_email_and_password(email, password)
+            user = auth_t.sign_in_with_email_and_password(email, password)
             session['user'] = email
-        except:
+            return redirect("/")
+        except Exception as e:
+            print(e)
             return 'Failed to login. Username and/or password may be incorrect.'
     else:
         return render_template('Login.html')
@@ -58,6 +61,7 @@ def login():
 def logout():
     if 'user' in session:
         session.pop('user')
+        print("Logout successful!")
         return redirect('/')
     else:
         return "No user is logged in."
@@ -68,7 +72,7 @@ def forgot_password():
         email = request.form.get('email')
         if email is None:
             return "Error - email field was empty"
-        auth.send_password_reset_email(email)
+        auth_t.send_password_reset_email(email)
         return 'Password reset email sent'
  
     else:
@@ -98,20 +102,31 @@ def createUser():
                 
             except pymongo.errors.DuplicateKeyError:
                 return ("A user with that username or email already exists.")
-            except:
-                return "Something went wrong. Please try again."
+            except Exception as e:
+                return str(e)
 
             try:
                 user = auth.create_user(email=email_a, password=password_a)
                 filter = {'email': email_a}
                 newvalues = {"$set": {'user_id': user.uid}}
                 mongo.db.users.update_one(filter, newvalues)
-                return {'message': f'Successfully created user {user.uid}'}, 200
-            except:
-                return {'message': 'Error! Something went wrong. Please try again'}, 400
+                print("User created successfully!")
+                return redirect('/create_success')
+            except Exception as e:
+                print(e)
+                myquery = {'email': email_a}
+                mongo.db.users.delete_one(myquery)
+                return {'message': str(e)}, 400
         
         else:
             return render_template('SignUp.html')
+
+@app.route("/create_success")
+def create_success():
+    if 'user' in session:
+        return "Error - user is already logged in."
+    else:
+        return render_template('create_success.html')
 
 @app.route("/setup_user_step_1", methods=["GET", "POST"])
 def setupUserStep1():
