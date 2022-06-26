@@ -276,8 +276,70 @@ def setupUserFinal():
 @app.route("/calculate_footprint", methods=["GET", "POST"])
 def calculate_footprint():
     if request.method == "POST":
-        print(request.form)
-        return "eeby deeby"
+        elBill = request.form.get('elBill')
+        gasBill = request.form.get('gasBill')
+        oilBill = request.form.get('oilBill')
+        mileage = request.form.get('mileage')
+        fly = request.form.get('fly')
+        fly2 = request.form.get('fly2')
+        news = request.form.get('news')
+        aluminum = request.form.get('aluminum')
+        news = str(news)
+        aluminum = str(aluminum)
+
+        if elBill == "" or gasBill == "" or oilBill == "" or mileage == "" or fly == "" or fly2 == "" or news == "" or aluminum == "":
+            print("!")
+            return "Error - one or more fields are invalid."
+        if news != "no" and news != "yes":
+            print("?")
+            return "Error - one or more fields are invalid."
+        if aluminum != "no" and aluminum != "yes":
+            print("...")
+            return "Error - one or more fields are invalid."
+        
+        
+        footprint = 0
+        try:
+            footprint = (float(elBill) * 105) + (float(gasBill) * 105) + (float(oilBill) * 113) + (float(mileage) * 0.79) + (float(fly) * 1100) + (float(fly2)*4400)
+            if news == "no" or news == "No" or news == "NO":
+                footprint = footprint + 184
+            if aluminum == "no" or aluminum == "No" or aluminum == "NO":
+                footprint = footprint + 166
+        except:
+            return "Error - something went wrong. Check your inputs and try again."
+
+        if 'user' in session:
+            filter = {'email': session['user']}
+            newvalues = {"$set": {'gas_bill':float(gasBill)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'electric_bill':float(elBill)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'oil_bill':float(oilBill)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'mileage':float(mileage)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'flights_less':int(fly)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'flights_greater':int(fly2)}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'recycle_paper':news}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'recycle_cans':aluminum}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            newvalues = {"$set": {'footprint':footprint}}
+            mongo.db.users.update_one(filter, newvalues)
+
+            print("User info updated successfully.")
+            
+        return "Your carbon footprint is " + str(footprint) + "."
     else:
         return render_template("Calculations.html")
 
