@@ -30,7 +30,10 @@ auth_t = pb.auth()
 @app.route("/")
 def index():
     if 'user' in session:
-        return render_template('home_page_signedin.html')
+        a = mongo.db.users.find_one({"email": session['user']})
+        username = a['username']
+    
+        return render_template('home_page_signedin.html', user_name = username)
     else:
         return render_template('home_page.html')
 
