@@ -358,3 +358,12 @@ def footprint_success():
         return render_template('footprint_success.html', foot_print = footprint)
     else:
         return "Error - only logged in users should be at this page"
+    
+@app.route('/problem')
+def problem():
+    if 'user' in session:
+        a = mongo.db.users.find_one({"email": session['user']})
+        username = a['username']
+        return render_template('problem_signedin.html', user_name = username)
+    else:
+        return render_template('problem.html')
