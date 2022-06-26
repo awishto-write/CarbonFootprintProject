@@ -372,3 +372,12 @@ def problem():
         return render_template('problem_signedin.html', user_name = username)
     else:
         return render_template('problem.html')
+
+@app.route('/solution')
+def solution():
+    if 'user' in session:
+        a = mongo.db.users.find_one({"email": session['user']})
+        username = a['username']
+        return render_template('solution_signedin.html', user_name = username)
+    else:
+        return render_template('solution.html')
