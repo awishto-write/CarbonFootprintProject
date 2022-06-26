@@ -32,8 +32,9 @@ def index():
     if 'user' in session:
         a = mongo.db.users.find_one({"email": session['user']})
         username = a['username']
+        footprint = a['footprint']
     
-        return render_template('home_page_signedin.html', user_name = username)
+        return render_template('home_page_signedin.html', user_name = username, foot_print = footprint)
     else:
         return render_template('home_page.html')
 
