@@ -342,9 +342,19 @@ def calculate_footprint():
             mongo.db.users.update_one(filter, newvalues)
 
             print("User info updated successfully.")
+            return redirect('/footprint_success')
+        else:
+            return render_template('footprint_success.html', foot_print = footprint)
             
-        return "Your carbon footprint is " + str(footprint) + "."
+       
     else:
         return render_template("Calculations.html")
 
-    
+@app.route('/footprint_success')
+def footprint_success():
+    if 'user' in session:
+        a = mongo.db.users.find_one({"email": session['user']})
+        footprint = a['footprint']
+        return render_template('footprint_success.html', foot_print = footprint)
+    else:
+        return "Error - only logged in users should be at this page"
