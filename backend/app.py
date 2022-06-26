@@ -348,7 +348,12 @@ def calculate_footprint():
             
        
     else:
-        return render_template("Calculations.html")
+        if 'user' in session:
+            a = mongo.db.users.find_one({"email": session['user']})
+            username = a['username']
+            return render_template('Calculations_signedin.html', user_name = username)
+        else:
+            return render_template("Calculations.html")
 
 @app.route('/footprint_success')
 def footprint_success():
